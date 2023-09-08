@@ -6,7 +6,7 @@ namespace AstartesKytheron
     [DefOf]
     public static class AstartesDefOf
     {
-        public static PawnKindDef AstartesPawn;
+        public static PawnKindDef AstartesColonist;
 
         static AstartesDefOf()
         {
