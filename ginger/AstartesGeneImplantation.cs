@@ -16,24 +16,31 @@ namespace AstartesKytheron
 
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
         {
+            Pawn newPawnTemplate = PawnGenerator.GeneratePawn(new PawnGenerationRequest(AstartesDefOf.AstartesColonist, Faction.OfPlayer, PawnGenerationContext.NonPlayer, -1, fixedGender: pawn.gender, fixedBirthName: pawn.story.birthLastName, fixedLastName: pawn.story.birthLastName));
+            newPawnTemplate.needs.food.CurLevel = pawn.needs.food.CurLevel;
+            newPawnTemplate.needs.rest.CurLevel = pawn.needs.rest.CurLevel;
+            newPawnTemplate.training.SetWantedRecursive(TrainableDefOf.Obedience, true);
+            newPawnTemplate.training.Train(TrainableDefOf.Obedience, null, true);
+            newPawnTemplate.Name = pawn.Name;
+            Pawn newPawn = (Pawn)GenSpawn.Spawn(newPawnTemplate, pawn.PositionHeld, pawn.MapHeld, WipeMode.Vanish);
+            pawn.apparel.DropAll(pawn.PositionHeld, true);
+            pawn.equipment.DropAllEquipment(pawn.PositionHeld, true);
+            pawn.Destroy(DestroyMode.Vanish);
+
+
             if (billDoer != null)
             {
-                if (base.CheckSurgeryFail(billDoer, pawn, ingredients, part, bill))
+                if (base.CheckSurgeryFail(billDoer, newPawn, ingredients, part, bill))
                 {
                     return;
                 }
                 TaleRecorder.RecordTale(TaleDefOf.DidSurgery, new object[]
                 {
                     billDoer,
-                    pawn
+                    newPawn
                 });
             }
-            pawn.health.AddHediff(this.recipe.addsHediff, part, null, null);
-
-            //pawn.ChangeKind(DefDatabase<PawnKindDef>.GetNamed("Drifter_SAS_75"));
-
-            Log.Message(AstartesDefOf.AstartesColonist.defName);
-            pawn.ChangeKind(AstartesDefOf.AstartesColonist);
+            newPawn.health.AddHediff(this.recipe.addsHediff, part, null, null);
         }
     }
 }
