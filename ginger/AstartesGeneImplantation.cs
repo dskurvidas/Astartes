@@ -32,8 +32,8 @@ namespace AstartesKytheron
 
             //pawn.ChangeKind(DefDatabase<PawnKindDef>.GetNamed("Drifter_SAS_75"));
 
-            Log.Message(AstartesDefOf.AstartesColonist.defName);
-            pawn.ChangeKind(AstartesDefOf.AstartesColonist);
+            Log.Message(AstartesDefOf.AstartesPawn.defName);
+            pawn.ChangeKind(AstartesDefOf.AstartesPawn);
         }
     }
 }
