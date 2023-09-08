@@ -16,6 +16,18 @@ namespace AstartesKytheron
 
         public override void ApplyOnPawn(Pawn pawn, BodyPartRecord part, Pawn billDoer, List<Thing> ingredients, Bill bill)
         {
+            if (billDoer != null)
+            {
+                if (base.CheckSurgeryFail(billDoer, pawn, ingredients, part, bill))
+                {
+                    return;
+                }
+                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, new object[]
+                {
+                    billDoer,
+                    pawn
+                });
+            }
             Pawn newPawnTemplate = PawnGenerator.GeneratePawn(new PawnGenerationRequest(AstartesDefOf.AstartesColonist, Faction.OfPlayer, PawnGenerationContext.NonPlayer, -1, fixedGender: pawn.gender, fixedBirthName: pawn.story.birthLastName, fixedLastName: pawn.story.birthLastName));
             newPawnTemplate.needs.food.CurLevel = pawn.needs.food.CurLevel;
             newPawnTemplate.needs.rest.CurLevel = pawn.needs.rest.CurLevel;
@@ -27,19 +39,6 @@ namespace AstartesKytheron
             pawn.equipment.DropAllEquipment(pawn.PositionHeld, true);
             pawn.Destroy(DestroyMode.Vanish);
 
-
-            if (billDoer != null)
-            {
-                if (base.CheckSurgeryFail(billDoer, newPawn, ingredients, part, bill))
-                {
-                    return;
-                }
-                TaleRecorder.RecordTale(TaleDefOf.DidSurgery, new object[]
-                {
-                    billDoer,
-                    newPawn
-                });
-            }
             newPawn.health.AddHediff(this.recipe.addsHediff, part, null, null);
         }
     }
