@@ -31,7 +31,8 @@ namespace AstartesKytheron
             pawn.health.AddHediff(this.recipe.addsHediff, part, null, null);
 
             //pawn.ChangeKind(DefDatabase<PawnKindDef>.GetNamed("Drifter_SAS_75"));
-            
+
+            Log.Message(AstartesDefOf.AstartesColonist.defName);
             pawn.ChangeKind(AstartesDefOf.AstartesColonist);
         }
     }
